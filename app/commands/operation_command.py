@@ -5,6 +5,7 @@ This module defines the OperationCommand class.
 import logging
 from app.commands import Command
 from calculator.input_handler import get_user_input
+from calculator import Calculations
 # pylint: disable=too-few-public-methods
 
 operation_symbols = {
@@ -21,6 +22,7 @@ class OperationCommand(Command):
         super().__init__()
         self.operation_function = operation_function
         self.loggers = logging.getLogger()
+        self.calculations = Calculations()
 
     def execute(self):
         a, b = get_user_input()
@@ -35,6 +37,8 @@ class OperationCommand(Command):
             log_message = f"{operation_name} operation, {a} {operation_symbol} {b} = {result}"
             print(f"The result of {operation_name} operation is: {result}")
             self.loggers.info(log_message)
+            # Add the calculation record to the history
+            self.calculations.add_calculation(a, b, operation_name, result)
         except ValueError as e:
             self.loggers.error(str(e))
             print(e)
