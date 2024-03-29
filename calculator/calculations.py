@@ -1,65 +1,43 @@
-"""
-This module provides a class for managing calculations and their history.
-"""
-
-from typing import List
-from calculator.calculation import Calculation
+import pandas as pd
+from decimal import Decimal
 
 class Calculations:
-    """
-    This class manages calculations and their history.
-    """
+    def __init__(self, file_path='history.csv'):
+        self.file_path = file_path
+        self.load_history()
 
-    history: List[Calculation] = []
+    def load_history(self):
+        try:
+            self.history = pd.read_csv(self.file_path)
+        except FileNotFoundError:
+            self.history = pd.DataFrame(columns=['Index', 'Operand 1', 'Operand 2', 'Operation', 'Result'])
 
-    @classmethod
-    def add_calculation(cls, calculation: Calculation):
-        """
-        Add a calculation to the history.
+    def save_history(self):
+        self.history.to_csv(self.file_path, index=False)  # Exclude index when saving
 
-        Args:
-            calculation (Calculation): The calculation to add to the history.
-        """
-        cls.history.append(calculation)
+    def add_calculation(self, a: Decimal, b: Decimal, operation: str, result: Decimal):
+        if self.history.empty:
+            new_index = 1
+        else:
+            new_index = self.history['Index'].max() + 1
+        new_calculation = pd.DataFrame([[new_index, a, b, operation, result]], columns=['Index', 'Operand 1', 'Operand 2', 'Operation', 'Result'])
+        self.history = pd.concat([self.history, new_calculation], ignore_index=True)
+        self.save_history()
 
-    @classmethod
-    def get_history(cls) -> List[Calculation]:
-        """
-        Get the list of all calculations in the history.
+    def clear_history(self):
+        self.history = pd.DataFrame(columns=['Index', 'Operand 1', 'Operand 2', 'Operation', 'Result'])
+        self.save_history()
 
-        Returns:
-            List[Calculation]: A list of Calculation objects representing the history.
-        """
-        return cls.history
+    def delete_record(self, index: int):
+        self.history = self.history.drop(index - 1)
+        self.history['Index'] = range(1, len(self.history) + 1)  # Re-indexing
+        self.save_history()
 
-    @classmethod
-    def clear_history(cls):
-        """
-        Clear the history of calculations.
-        """
-        cls.history.clear()
+    def get_history(self):
+        return self.history
 
-    @classmethod
-    def get_latest(cls) -> Calculation | None:
-        """
-        Get the latest calculation from the history.
-
-        Returns:
-            Calculation | None: The latest Calculation object if available, else None.
-        """
-        if cls.history:
-            return cls.history[-1]
-        return None
-
-    @classmethod
-    def find_by_operation(cls, operation_name: str) -> List[Calculation]:
-        """
-        Find calculations in the history with a specific operation.
-
-        Args:
-            operation_name (str): The name of the operation to search for.
-
-        Returns:
-            List[Calculation]: A list of Calculation objects with the specified operation.
-        """
-        return [calc for calc in cls.history if calc.operation.__name__ == operation_name]
+    def get_latest(self):
+        if not self.history.empty:
+            return self.history.iloc[-1]
+        else:
+            return None
