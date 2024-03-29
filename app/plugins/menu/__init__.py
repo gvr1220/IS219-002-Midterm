@@ -9,14 +9,18 @@ class MenuCommand(Command):
     """
     Represents a command for displaying a menu of options.
     """
+class MenuCommand(Command):
+    """
+    Represents a command for displaying a menu of options.
+    """
     def execute(self):
         menu_options = [
             "add",
             "subtract",
             "multiply",
             "divide",
-            "history"
+            "history",
         ]
         print("Menu:")
-        for index, option in enumerate(menu_options, start=1):
-            print(f"{index}. {option}")
+        for option in menu_options:
+            print(f"- {option}")

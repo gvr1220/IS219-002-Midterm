@@ -15,7 +15,7 @@ class HistoryCommand(Command):
         Initializes the HistoryCommand object.
         """
         super().__init__()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('root')
         self.calculations = Calculations()
 
     def execute(self):
@@ -65,9 +65,13 @@ class HistoryCommand(Command):
         """
         Deletes a record from the command history.
         """
-
         self.logger.info("Deleting record")
-        index = int(input("Enter the index of the record to delete: "))
+        try:
+            index = int(input("Enter the index of the record to delete: "))
+        except ValueError:
+            print("Invalid input. Please enter a valid index number.")
+            return
+
         try:
             self.calculations.delete_record(index)
             print("Record deleted successfully.")
