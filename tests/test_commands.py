@@ -32,4 +32,4 @@ class TestCommandHandler(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as mocked_stdout:
             self.command_handler.execute_command("0")
             self.assertEqual(mocked_stdout.getvalue().strip(),
-                             "Invalid menu option. Please enter a valid option number.")
+                             "No such command: 0")

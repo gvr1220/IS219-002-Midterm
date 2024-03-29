@@ -4,10 +4,12 @@ Module for performing calculations and managing calculation history.
 from decimal import Decimal
 import pandas as pd
 
+
 class Calculations:
     """
     Class for performing calculations and managing calculation history.
     """
+
     def __init__(self, file_path='history.csv'):
         """
         Initialize Calculations object.
@@ -75,4 +77,3 @@ class Calculations:
         if not self.history.empty:
             return self.history.iloc[-1]
         return None
-

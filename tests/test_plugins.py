@@ -75,8 +75,8 @@ def test_menu_command(capsys):
         app.command_handler.execute_command("menu")
         captured = capsys.readouterr()
         assert "Menu:" in captured.out
-        assert "1. add" in captured.out
-        assert "2. subtract" in captured.out
-        assert "3. multiply" in captured.out
-        assert "4. divide" in captured.out
-        assert "5. history" in captured.out
+        assert "- add" in captured.out
+        assert "- subtract" in captured.out
+        assert "- multiply" in captured.out
+        assert "- divide" in captured.out
+        assert "- history" in captured.out

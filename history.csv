@@ -1,1 +1,4 @@
 Index,Operand 1,Operand 2,Operation,Result
+1,2,0,add,2
+2,20,20,add,40
+3,59,593,add,652
