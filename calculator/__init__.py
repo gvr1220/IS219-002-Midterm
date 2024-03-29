@@ -28,7 +28,8 @@ class Calculator:
             Decimal: The result of the calculation.
         """
         calculation = Calculation.create(a, b, operation)
-        Calculations.add_calculation(calculation)
+        calc_instance = Calculations()
+        calc_instance.add_calculation(a, b, operation.__name__, calculation.perform())
         return calculation.perform()
 
     @staticmethod

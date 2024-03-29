@@ -78,7 +78,6 @@ class App:
                 except ImportError as e:
                     logging.error("Error importing plugin %s: %s", plugin_name, e)
 
-
     def register_plugin_commands(self, plugin_module, plugin_name):
         """
         Register commands from a plugin module.
@@ -113,7 +112,7 @@ class App:
                     self.command_handler.execute_command(cmd_input)
                 except KeyError:  # Assuming execute_command raises KeyError for unknown commands
                     logging.error("Unknown command: %s", cmd_input)
-                    sys.exit(1) # Use a non-zero exit code to indicate failure or incorrect command
+                    sys.exit(1)  # Use a non-zero exit code to indicate failure or incorrect command
         except KeyboardInterrupt:
             logging.info("Application interrupted and exiting gracefully.")
             sys.exit(0)  # Assuming a KeyboardInterrupt should also result in a clean exit.

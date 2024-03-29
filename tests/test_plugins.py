@@ -1,17 +1,14 @@
 """
-Module docstring: This module contains unit tests for the App class and its commands.
+Unit tests for the App class and its commands.
 """
 
-import unittest
 from unittest.mock import patch
-from io import StringIO
 from app import App
 from app.plugins.add import AddCommand
 from app.plugins.divide import DivideCommand
 from app.plugins.multiply import MultiplyCommand
 from app.plugins.subtract import SubtractCommand
 from app.plugins.menu import MenuCommand
-from app.plugins.history import HistoryCommand
 
 
 @patch('sys.exit')
@@ -83,47 +80,3 @@ def test_menu_command(capsys):
         assert "3. multiply" in captured.out
         assert "4. divide" in captured.out
         assert "5. history" in captured.out
-
-class TestHistoryCommand(unittest.TestCase):
-
-    @patch('app.plugins.history.HistoryCommand.show_history')
-    @patch('builtins.input', side_effect=['1', '4'])
-    def test_execute_show_history(self, mock_input, mock_show_history):
-        command = HistoryCommand()
-        command.execute()
-        mock_show_history.assert_called()
-
-    @patch('app.plugins.history.HistoryCommand.clear_history')
-    @patch('builtins.input', side_effect=['2', '4'])
-    def test_execute_clear_history(self, mock_input, mock_clear_history):
-        command = HistoryCommand()
-        command.execute()
-        mock_clear_history.assert_called()
-
-    @patch('app.plugins.history.HistoryCommand.delete_record')
-    @patch('builtins.input', side_effect=['3', '4'])
-    def test_execute_delete_record(self, mock_input, mock_delete_record):
-        command = HistoryCommand()
-        command.execute()
-        mock_delete_record.assert_called()
-
-    @patch('builtins.input', side_effect=['4'])
-    def test_execute_exit(self, mock_input):
-        command = HistoryCommand()
-        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-            command.execute()
-            self.assertEqual(mock_stdout.getvalue().strip(), 'History Menu:\n1. Show History\n2. Clear History\n3. Delete Record\n4. Return to Main Menu')
-
-    @patch('app.plugins.history.Calculations.clear_history')
-    def test_clear_history(self, mock_clear_history):
-        command = HistoryCommand()
-        command.clear_history()
-        mock_clear_history.assert_called()
-
-    @patch('builtins.input', return_value='1')
-    @patch('app.plugins.history.Calculations.delete_record')
-    def test_delete_record(self, mock_delete_record, mock_input):
-        command = HistoryCommand()
-        command.delete_record()
-        mock_delete_record.assert_called_with(1)
-

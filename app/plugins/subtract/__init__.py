@@ -5,6 +5,7 @@ This module defines the SubtractCommand class.
 import logging
 from app.commands.operation_command import OperationCommand
 from calculator.operations import subtract
+# pylint: disable=too-few-public-methods
 
 
 class SubtractCommand(OperationCommand):

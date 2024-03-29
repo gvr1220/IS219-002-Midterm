@@ -5,6 +5,7 @@ This module defines the AddCommand class.
 import logging
 from app.commands.operation_command import OperationCommand
 from calculator.operations import add
+# pylint: disable=too-few-public-methods
 
 
 class AddCommand(OperationCommand):

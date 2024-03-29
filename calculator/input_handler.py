@@ -1,10 +1,19 @@
+"""
+This module contains functions for getting user input and logging warnings.
+"""
 import logging
 from decimal import Decimal, InvalidOperation
 
 logging.basicConfig(level=logging.INFO)
 loggers = logging.getLogger("root")
 
+
 def get_user_input():
+    """Get user input for two decimal numbers.
+
+    Returns:
+    Tuple[Decimal, Decimal]: A tuple containing two Decimal numbers entered by the user.
+    """
     while True:
         try:
             a = Decimal(input("Enter the first number: "))
@@ -15,4 +24,4 @@ def get_user_input():
             loggers.warning("Invalid input detected")
             choice = input("Do you want to continue? (yes/no): ").lower()
             if choice != 'yes':
-                return None, None  # Returning None values to indicate the user wants to return to the main page
+                return None, None  #user wants to return to the main page

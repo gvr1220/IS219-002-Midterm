@@ -2,6 +2,7 @@
 This module provides the MenuCommand class for displaying a menu of options.
 """
 from app.commands import Command
+# pylint: disable=too-few-public-methods
 
 
 class MenuCommand(Command):

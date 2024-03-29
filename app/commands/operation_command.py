@@ -4,9 +4,8 @@ This module defines the OperationCommand class.
 
 import logging
 from app.commands import Command
-from calculator.calculation import Calculation
-from calculator.calculations import Calculations
 from calculator.input_handler import get_user_input
+# pylint: disable=too-few-public-methods
 
 operation_symbols = {
     'add': '+',
@@ -15,6 +14,9 @@ operation_symbols = {
     'divide': '/',
 }
 class OperationCommand(Command):
+    """
+    Represents a command to perform a mathematical operation.
+    """
     def __init__(self, operation_function):
         super().__init__()
         self.operation_function = operation_function
@@ -28,7 +30,6 @@ class OperationCommand(Command):
             return  # Return to main page
         try:
             result = self.operation_function(a, b)
-            calculation = Calculation.create(a, b, self.operation_function)
             operation_name = self.operation_function.__name__
             operation_symbol = operation_symbols.get(operation_name, '')
             log_message = f"{operation_name} operation, {a} {operation_symbol} {b} = {result}"

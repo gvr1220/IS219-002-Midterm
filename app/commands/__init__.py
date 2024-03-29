@@ -3,6 +3,8 @@ This module defines the Command and CommandHandler classes.
 """
 
 from abc import ABC, abstractmethod
+# pylint: disable=too-few-public-methods
+
 
 class Command(ABC):
     """
@@ -14,7 +16,8 @@ class Command(ABC):
         """
         Execute the command.
         """
-        pass
+        pass # pylint: disable=unnecessary-pass
+
 
 class CommandHandler:
     """
@@ -42,7 +45,7 @@ class CommandHandler:
             if menu_option < 1 or menu_option > len(self.commands):
                 print("Invalid menu option. Please enter a valid option number.")
                 return
-            command_name = list(self.commands.keys())[menu_option - 1]  # Get command name from index
+            command_name = list(self.commands.keys())[menu_option - 1]#Get command name from index
         except ValueError:
             # If input cannot be converted to integer, treat it as command name
             command_name = command_input.lower()
@@ -51,4 +54,3 @@ class CommandHandler:
             self.commands[command_name].execute()
         except KeyError:
             print(f"No such command: {command_name}")
-
