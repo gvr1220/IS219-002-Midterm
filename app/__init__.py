@@ -105,7 +105,7 @@ class App:
         logging.info("Application started. Type 'exit' to exit.")
         try:
             while True:
-                cmd_input = input(">>> ").strip()
+                cmd_input = input(">>> ").strip().lower()
                 if cmd_input.lower() == 'exit':
                     logging.info("Application exit.")
                     sys.exit(0)  # Use sys.exit(0) for a clean exit, indicating success.

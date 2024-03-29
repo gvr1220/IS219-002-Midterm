@@ -34,14 +34,21 @@ class CommandHandler:
         """
         self.commands[command_name] = command
 
-    def execute_command(self, command_name: str):
-        """
-        Execute a registered command.
+    def execute_command(self, command_input: str):
+        """Execute a command based on input."""
+        try:
+            # Attempt to convert input to integer, indicating menu option number
+            menu_option = int(command_input)
+            if menu_option < 1 or menu_option > len(self.commands):
+                print("Invalid menu option. Please enter a valid option number.")
+                return
+            command_name = list(self.commands.keys())[menu_option - 1]  # Get command name from index
+        except ValueError:
+            # If input cannot be converted to integer, treat it as command name
+            command_name = command_input.lower()
 
-        Args:
-            command_name (str): The name of the command.
-        """
         try:
             self.commands[command_name].execute()
         except KeyError:
             print(f"No such command: {command_name}")
+

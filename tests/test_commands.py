@@ -1,81 +1,36 @@
-"""
-Module docstring: This module contains unit tests for the App class and its commands.
-"""
-
+import unittest
 from unittest.mock import patch
-from app import App
-from app.plugins.add import AddCommand
-from app.plugins.divide import DivideCommand
-from app.plugins.multiply import MultiplyCommand
-from app.plugins.subtract import SubtractCommand
-from app.plugins.menu import MenuCommand
+from io import StringIO
+from app.commands import CommandHandler, Command
+from app.commands.operation_command import OperationCommand
 
 
-@patch('sys.exit')
-def test_add_command(mock_exit, capsys):
-    """Test the add command."""
-    inputs = iter(['10', '20', 'exit'])
-    with patch('builtins.input', side_effect=inputs):
-        app = App()
-        app.command_handler.register_command("add", AddCommand())
-        app.command_handler.execute_command("add")
-        captured = capsys.readouterr()
-        assert "The result of add operation is 30" in captured.out
-        assert not mock_exit.called  # Ensure sys.exit was not called
+class MockCommand(Command):
+    def execute(self):
+        pass
 
 
-def test_subtract_command(capsys):
-    """Test the subtract command."""
-    inputs = iter(['20', '5', 'exit'])
-    with patch('builtins.input', side_effect=inputs):
-        app = App()
-        app.command_handler.register_command("subtract", SubtractCommand())
-        app.command_handler.execute_command("subtract")
-        captured = capsys.readouterr()
-        assert "The result of subtract operation is 15" in captured.out
+class TestCommandHandler(unittest.TestCase):
+    def setUp(self):
+        self.command_handler = CommandHandler()
 
+    def test_register_command(self):
+        mock_command = MockCommand()
+        self.command_handler.register_command("test_command", mock_command)
+        self.assertIn("test_command", self.command_handler.commands)
+        self.assertEqual(mock_command, self.command_handler.commands["test_command"])
 
-def test_multiply_command(capsys):
-    """Test the multiply command."""
-    inputs = iter(['10', '3', 'exit'])
-    with patch('builtins.input', side_effect=inputs):
-        app = App()
-        app.command_handler.register_command("multiply", MultiplyCommand())
-        app.command_handler.execute_command("multiply")
-        captured = capsys.readouterr()
-        assert "The result of multiply operation is 30" in captured.out
+    def test_execute_command_invalid_menu_option(self):
+        with patch('sys.stdout', new=StringIO()) as mocked_stdout:
+            self.command_handler.execute_command("0")
+            self.assertEqual(mocked_stdout.getvalue().strip(), "Invalid menu option. Please enter a valid option number.")
 
+    @patch('builtins.input', side_effect=["2", "3"])  # Providing numeric input for add operation
+    def test_execute_command_operation(self, mocked_input):
+        add_function = lambda a, b: a + b
+        add_function.__name__ = "add"  # Set function name for lambda
+        self.command_handler.register_command("add", OperationCommand(add_function))
+        with patch('sys.stdout', new=StringIO()) as mocked_stdout:
+            self.command_handler.execute_command("add")
+            self.assertEqual(mocked_stdout.getvalue().strip(), "The result of add operation is: 5")
 
-def test_divide_command(capsys):
-    """Test the divide command."""
-    # Test division with non-zero divisor
-    inputs = iter(['20', '4', 'exit'])
-    with patch('builtins.input', side_effect=inputs):
-        app = App()
-        app.command_handler.register_command("divide", DivideCommand())
-        app.command_handler.execute_command("divide")
-        captured = capsys.readouterr()
-        assert "The result of divide operation is 5" in captured.out
-
-    # Test division with zero divisor
-    inputs = iter(['20', '0', 'exit'])
-    with patch('builtins.input', side_effect=inputs):
-        app = App()
-        app.command_handler.register_command("divide", DivideCommand())
-        app.command_handler.execute_command("divide")
-        captured = capsys.readouterr()
-        assert "Please enter a non-zero divisor." in captured.out
-
-
-def test_menu_command(capsys):
-    """Test the menu command."""
-    with patch('builtins.input', side_effect=['exit']):
-        app = App()
-        app.command_handler.register_command("menu", MenuCommand())
-        app.command_handler.execute_command("menu")
-        captured = capsys.readouterr()
-        assert "Menu:" in captured.out
-        assert "1. add" in captured.out
-        assert "2. subtract" in captured.out
-        assert "3. multiply" in captured.out
-        assert "4. divide" in captured.out

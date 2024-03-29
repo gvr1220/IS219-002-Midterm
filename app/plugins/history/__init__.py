@@ -16,7 +16,7 @@ class HistoryCommand(Command):
             print("2. Clear History")
             print("3. Delete Record")
             print("4. Return to Main Menu")
-            choice = input("Enter your choice: ")
+            choice = input("Enter your number choice: ")
             if choice == '1':
                 self.show_history()
             elif choice == '2':
