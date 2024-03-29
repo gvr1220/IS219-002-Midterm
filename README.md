@@ -1,104 +1,40 @@
 # Advanced Python Calculator for Software Engineering Graduate Course
 
-## Project Overview
+## Description
 
-This midterm requires the development of an advanced Python-based calculator application. Designed to underscore the importance of professional software development practices, the application integrates clean, maintainable code, the application of design patterns, comprehensive logging, dynamic configuration via environment variables, sophisticated data handling with Pandas, and a command-line interface (REPL) for real-time user interaction.
-## Instructor Video - [here](https://youtu.be/hu9YFdeSkV8)
+My calculator app provides a user-friendly interface for performing arithmetic operations on Decimal numbers. It utilizes various design patterns to ensure modularity, extensibility, and maintainability.
 
-## Project Submission
+- Command Pattern: I use the Command pattern to encapsulate operations as objects, allowing for easy extension and customization. Each command, such as addition, subtraction, etc., is represented as a class, making it simple to add new operations or modify existing ones. [here](https://refactoring.guru/design-patterns/command)
 
-- Create a NEW repository from scratch and transfer any relevant work as you complete the assignment, **you need to show a clear history of work through your commits, or your project could be given as low as a 0 for not showing your work.**
-- Submit through a GitHub repository link containing the necessary documentation, configuration examples, and a coherent commit history.
-- You are required to write a short description and link to your implememtation of the design patterns you use.
-- You need to provide a description of how you used environment variables and link to your code to illustrate.
--  You need to explain and link to how you are using logging.
--  You need to link to and explain how you are using try/catch / exceptions to illustrate  "Look Before You Leap" (LBYL) and "Easier to Ask for Forgiveness than Permission" (EAFP)/
-- Create a 3-5 minute video demonstration of using the calculator, highlighting its key features and functionalities. Link the video to the repository readme.
--  Submit a link to your repository to Canvas.  
--  Keep your repository private while working on it, so people don't copy your work.  Make the repository public within a day of the project being due, so we can grade it.
-- **REQUIRED - YOU MUST USE GITHUB ACTIONS AND YOUR CODE MUST PASS ALL THE TESTS ON GITHUB**
+- Factory Method Pattern: The app utilizes the Factory Method pattern to dynamically load plugin modules. This enables the addition of new functionalities without modifying existing code. [here](https://refactoring.guru/design-patterns/factory-method)
 
-## Core Functionalities
+- Singleton Pattern: I employ the Singleton pattern for the Calculations class, ensuring that only one instance manages the calculation history throughout the app's lifecycle. This ensures consistency and avoids redundant instantiation. [here](https://refactoring.guru/design-patterns/singleton)
 
-### Command-Line Interface (REPL)
+- Strategy Pattern: The Strategy pattern is utilized within the Calculator class to perform arithmetic operations. I achieve flexibility in selecting different algorithms for calculations while keeping the interface consistent. [here](https://refactoring.guru/design-patterns/strategy)
 
-Implement a Read-Eval-Print Loop (REPL) to facilitate direct interaction with the calculator. This interface should support:
-- Execution of arithmetic operations (Add, Subtract, Multiply, and Divide)
-- Management of calculation history.
-- Access to extended functionalities through dynamically loaded plugins.
+## Environment variables
 
-### Plugin System
+I make use of environment variables to configure various settings. First, I load environment variables from a .env file using the dotenv library. Then, I set default values for certain variables if they are not provided. For instance, I ensure that the ENVIRONMENT variable is set to "PRODUCTION" by default if it's not defined in the environment.
 
-Create a flexible plugin system to allow seamless integration of new commands or features. This system should:
-- Dynamically load and integrate plugins without modifying the core application code.
-- Include a REPL  "Menu" command to list all available plugin commands, ensuring user discoverability and interaction.
+This approach allows me to customize the behavior of the application based on the environment it's running in. Whether it's development, testing, or production, I can adjust settings accordingly without modifying the code directly. This enhances flexibility and maintainability, making it easier to manage the application's configuration across different environments.
 
-### Calculation History Management with Pandas
+You can check out how I implemented this in my code by taking a look at the load_environment_variables method in my App class in the [__init__.py file](https://github.com/gvr1220/IS219-002-Midterm/blob/main/app/__init__.py).
 
-Utilize Pandas to manage a robust calculation history, enabling users to:
-- Load, save, clear, and delete history records through the REPL interface.
+## Logging:
+
+In my calculator application, I'm using logging to keep track of important events and errors that occur during its operation. Logging helps me understand what's happening inside the application. I've set up logging to record messages at different levels, such as INFO, ERROR, and WARNING. This allows me to log when the application starts, when commands are executed, and when errors occur. For example, when the application initializes, I log a message to indicate that logging has been configured. This helps me ensure that the logging system is set up correctly.
+
+Throughout the application, I log messages to track the execution of commands, such as when a command is registered or when a calculation is performed. This gives me insight into how users interact with the application. Additionally, I log error messages when something unexpected happens, such as when a plugin fails to load or when an unknown command is entered. These error messages help me identify issues efficiently. If you want to see how I've implemented logging, you can check out the configure_logging method in my App class 
+[__init__.py file](https://github.com/gvr1220/IS219-002-Midterm/blob/main/app/__init__.py) file.
+
+## try/catch / exceptions
 
 
-### Professional Logging Practices
+In my code, I use try/catch blocks to handle potential errors that might occur during the execution of certain operations.
 
-Establish a comprehensive logging system to record:
-- Detailed application operations, data manipulations, errors, and informational messages.
-- Differentiate log messages by severity (INFO, WARNING, ERROR) for effective monitoring.
-- Dynamic logging configuration through environment variables for levels and output destinations.
+For example, in the [execute_command method](https://github.com/gvr1220/IS219-002-Midterm/blob/main/app/commands/__init__.py) of the CommandHandler class, I'm employing the "Easier to Ask for Forgiveness than Permission" approach. Instead of checking beforehand whether a command exists, I simply attempt to execute it within a try block. If the command doesn't exist, a KeyError exception is raised, which I catch and handle appropriately by printing an error message. This approach assumes that executing the command is the common. 
 
-### Advanced Data Handling with Pandas
+Also, I apply "Look Before You Leap" by checking if certain directories or files exist before attempting to access or manipulate them. For instance, I create a 'logs' directory only if it doesn't already exist using os.makedirs('logs', exist_ok=True). Similarly, I verify if a logging configuration file exists before attempting to load it. [here](https://github.com/gvr1220/IS219-002-Midterm/blob/main/app/__init__.py)
 
-Employ Pandas for:
-- Efficient data reading and writing to CSV files.
-- Managing calculation history.
-
-### Design Patterns for Scalable Architecture
-
-Incorporate key design patterns to address software design challenges, including:
-- **Facade Pattern:** Offer a simplified interface for complex Pandas data manipulations.
-- **Command Pattern:** Structure commands within the REPL for effective calculation and history management.
-- **Factory Method, Singleton, and Strategy Patterns:** Further enhance the application's code structure, flexibility, and scalability.
-
-## Development, Testing, and Documentation Requirements
-
-### Testing and Code Quality
-
-- Achieve a minimum of 90% test coverage with Pytest.
-- Ensure code quality and adherence to PEP 8 standards, verified by Pylint.
-
-### Version Control Best Practices
-
-- Utilize logical commits that clearly group feature development and corresponding tests, evidencing clear development progression.
-
-### Comprehensive Documentation
-
-- Compile detailed documentation in `README.md`, covering setup instructions, usage examples, and an in-depth analysis of architectural decisions, particularly emphasizing the implementation and impact of chosen design patterns and the logging strategy.
-
-
-## Evaluation Criteria
-
-### Total Points: 100
-
-#### Functionality (40 Points)
-
-- **Calculator Operations:** 20 points for implementing basic and statistical operations.
-- **History Management:** 10 points for effective management using Pandas.
-- **Configuration via Environment Variables:** 5 points for flexible application configuration.
-- **REPL Interface:** 5 points for a user-friendly command-line interface.
-
-#### Design Patterns (20 Points)
-
-- **Implementation and Application:** 10 points for the effective use of design patterns.
-- **Documentation and Explanation:** 10 points for thorough documentation of design pattern rationale and implementation.
-
-#### Testing and Code Quality (20 Points)
-
-- **Comprehensive Testing with Pytest:** 10 points for extensive test coverage.
-- **Code Quality and Adherence to Standards:** 10 points for clean, maintainable code.
-
-#### Version Control, Documentation, and Logging (20 Points)
-
-- **Commit History:** 10 points for logical and informative commit messages.
-- **README Documentation:** 5 points for comprehensive setup and usage instructions.
-- **Logging Practices:** 5 points for implementing adaptable and informative logging.
+[Link to video](https://drive.google.com/file/d/1ACcXsg1D96BmFDP5-THVxBoLN5201_/view?usp=sharing)
 
