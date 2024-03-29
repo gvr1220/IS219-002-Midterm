@@ -5,6 +5,7 @@ Module docstring: This module contains unit tests for the App class.
 import pytest
 from app import App
 
+
 def test_app_start_exit_command(monkeypatch):
     """
     Test that the REPL exits correctly on 'exit' command.
@@ -15,6 +16,7 @@ def test_app_start_exit_command(monkeypatch):
     with pytest.raises(SystemExit) as e:
         app.start()
     assert e.type == SystemExit
+
 
 def test_app_start_unknown_command(capfd, monkeypatch):
     """

@@ -7,6 +7,7 @@ from calculator.calculation import Calculation
 from calculator.calculations import Calculations
 from calculator.operations import add, subtract
 
+
 @pytest.fixture
 def setup_calculations():
     """Clear history and add sample calculations for tests."""

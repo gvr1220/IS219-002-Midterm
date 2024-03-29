@@ -8,6 +8,7 @@ from calculator.operations import add, subtract, multiply, divide
 
 fake = Faker()
 
+
 def generate_test_data(num_records):
     """
     Generate test data for calculator operations.
@@ -46,12 +47,14 @@ def generate_test_data(num_records):
 
         yield a, b, operation_name, operation_func, expected
 
+
 def pytest_addoption(parser):
     """
     Add command-line option for number of test records.
     """
     parser.addoption("--num_records", action="store",
                      default=5, type=int, help="Number of test records to generate")
+
 
 def pytest_generate_tests(metafunc):
     """
