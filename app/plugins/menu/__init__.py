@@ -13,7 +13,8 @@ class MenuCommand(Command):
             "add",
             "subtract",
             "multiply",
-            "divide"
+            "divide",
+            "history"
         ]
         print("Menu:")
         for index, option in enumerate(menu_options, start=1):
