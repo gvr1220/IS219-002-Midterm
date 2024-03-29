@@ -1,69 +1,54 @@
-"""My Calculator Test"""
-# pylint: disable=redefined-outer-name
-# pylint: disable=unused-argument
+import unittest
+from calculator import Calculations
 from decimal import Decimal
-import pytest
-from calculator.calculation import Calculation
-from calculator.calculations import Calculations
-from calculator.operations import add, subtract
+import os
 
+class TestCalculations(unittest.TestCase):
+    def setUp(self):
+        self.calculator = Calculations(file_path='test_history.csv')
 
-@pytest.fixture
-def setup_calculations():
-    """Clear history and add sample calculations for tests."""
-    Calculations.clear_history()
-    Calculations.add_calculation(Calculation(Decimal('10'), Decimal('5'), add))
-    Calculations.add_calculation(Calculation(Decimal('20'), Decimal('3'), subtract))
+    def tearDown(self):
+        if os.path.exists('test_history.csv'):
+            os.remove('test_history.csv')
 
+    def test_add_calculation(self):
+        self.calculator.add_calculation(Decimal('2'), Decimal('3'), 'add', Decimal('5'))
+        history = self.calculator.get_history()
+        self.assertEqual(len(history), 1)
+        self.assertEqual(history['Operand 1'].iloc[0], Decimal('2'))
+        self.assertEqual(history['Operand 2'].iloc[0], Decimal('3'))
+        self.assertEqual(history['Operation'].iloc[0], 'add')
+        self.assertEqual(history['Result'].iloc[0], Decimal('5'))
 
-def test_add_calculation(setup_calculations):
-    """Test adding a calculation to the history."""
-    calc = Calculation(Decimal('2'), Decimal('2'), add)
-    Calculations.add_calculation(calc)
-    assert Calculations.get_latest() == calc, "Failed to add the calculation to the history"
+    def test_delete_record(self):
+        self.calculator.add_calculation(Decimal('2'), Decimal('3'), 'add', Decimal('5'))
+        self.calculator.delete_record(1)
+        history = self.calculator.get_history()
+        self.assertEqual(len(history), 0)
 
+    def test_clear_history(self):
+        self.calculator.add_calculation(Decimal('2'), Decimal('3'), 'add', Decimal('5'))
+        self.calculator.clear_history()
+        history = self.calculator.get_history()
+        self.assertEqual(len(history), 0)
 
-def test_get_history(setup_calculations):
-    """Test retrieving the entire calculation history."""
-    history = Calculations.get_history()
+    def test_get_latest(self):
+        self.assertIsNone(self.calculator.get_latest())
+        self.calculator.add_calculation(Decimal('2'), Decimal('3'), 'add', Decimal('5'))
+        latest = self.calculator.get_latest()
+        self.assertIsNotNone(latest)
+        self.assertEqual(latest['Operand 1'], Decimal('2'))
+        self.assertEqual(latest['Operand 2'], Decimal('3'))
+        self.assertEqual(latest['Operation'], 'add')
+        self.assertEqual(latest['Result'], Decimal('5'))
 
-    assert len(history) == 2, "History does not contain the expected number of calculations"
+    def test_invalid_delete_record(self):
+        self.assertEqual(len(self.calculator.get_history()), 0)
+        with self.assertRaises(KeyError):
+            self.calculator.delete_record(1)
+        self.calculator.add_calculation(Decimal('2'), Decimal('3'), 'add', Decimal('5'))
+        with self.assertRaises(KeyError):
+            self.calculator.delete_record(2)
 
-
-def test_clear_history(setup_calculations):
-    """Test clearing the entire calculation history."""
-
-    Calculations.clear_history()
-
-    assert len(Calculations.get_history()) == 0, "History was not cleared"
-
-
-def test_get_latest(setup_calculations):
-    """Test getting the latest calculation from the history."""
-
-    latest = Calculations.get_latest()
-
-    assert (latest.a == Decimal('20') and
-            latest.b == Decimal('3')), "Did not get the correct latest calculation"
-
-
-def test_find_by_operation(setup_calculations):
-    """Test finding calculations in the history by operation type."""
-
-    add_operations = Calculations.find_by_operation("add")
-
-    assert len(add_operations) == 1, \
-        "Did not find the correct number of calculations with add operation"
-
-    subtract_operations = Calculations.find_by_operation("subtract")
-
-    assert len(subtract_operations) == 1, \
-        "Did not find the correct number of calculations with subtract operation"
-
-
-def test_get_latest_with_empty_history():
-    """Test getting the latest calculation when the history is empty."""
-
-    Calculations.clear_history()
-    assert Calculations.get_latest() is None, \
-        "Expected None for latest calculation with empty history"
+if __name__ == '__main__':
+    unittest.main()
