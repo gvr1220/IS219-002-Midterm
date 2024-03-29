@@ -1,4 +1,4 @@
-"""
+""""
 Module for performing calculations and managing calculation history.
 """
 from decimal import Decimal
@@ -25,7 +25,9 @@ class Calculations:
         try:
             self.history = pd.read_csv(self.file_path)
         except FileNotFoundError:
-            pass
+            self.save_history()  # Create an empty history file
+        except Exception as e:
+            print(f"Error loading history: {e}")
 
     def save_history(self):
         """
@@ -73,3 +75,4 @@ class Calculations:
         if not self.history.empty:
             return self.history.iloc[-1]
         return None
+
