@@ -20,7 +20,7 @@ This approach allows me to customize the behavior of the application based on th
 
 You can check out how I implemented this in my code by taking a look at the load_environment_variables method in my App class in the [__init__.py file](https://github.com/gvr1220/IS219-002-Midterm/blob/main/app/__init__.py).
 
-## Logging:
+## Logging
 
 In my calculator application, I'm using logging to keep track of important events and errors that occur during its operation. Logging helps me understand what's happening inside the application. I've set up logging to record messages at different levels, such as INFO, ERROR, and WARNING. This allows me to log when the application starts, when commands are executed, and when errors occur. For example, when the application initializes, I log a message to indicate that logging has been configured. This helps me ensure that the logging system is set up correctly.
 
@@ -36,5 +36,5 @@ For example, in the [execute_command method](https://github.com/gvr1220/IS219-00
 
 Also, I apply "Look Before You Leap" by checking if certain directories or files exist before attempting to access or manipulate them. For instance, I create a 'logs' directory only if it doesn't already exist using os.makedirs('logs', exist_ok=True). Similarly, I verify if a logging configuration file exists before attempting to load it. [here](https://github.com/gvr1220/IS219-002-Midterm/blob/main/app/__init__.py)
 
-[Link to video](https://drive.google.com/file/d/1ACcXsg1D96BmFDP5-THVxBoLN5201_/view?usp=sharing)
+[Link to video](https://drive.google.com/file/d/1PKcKflu4sj6mCk_J1dEuzJhlX_NB7U82/view?usp=sharing)
 
